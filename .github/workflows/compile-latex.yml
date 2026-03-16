@@ -14,7 +14,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-       # Step 2: Install biber with biblatex compatibility
+      # Step 2: Install biber with biblatex compatibility
       - name: Install biber
         run: |
           sudo apt-get update
@@ -26,9 +26,11 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
-      # Step 4: Compile LaTeX to PDF
+      # Step 4: Compile LaTeX from within project folder
       - name: Compile LaTeX
-        run: tectonic -X compile MyLatexProject/main.tex --keep-logs
+        run: |
+          cd MyLatexProject
+          tectonic -X compile main.tex --keep-logs
 
       # Step 5: Upload PDF as downloadable artifact
       - name: Upload PDF artifact
