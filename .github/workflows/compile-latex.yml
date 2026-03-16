@@ -32,6 +32,10 @@ jobs:
           cd MyLatexProject
           tectonic -X compile main.tex --keep-logs
 
+      # Step 4b: Show log for debugging
+      - name: Show LaTeX log
+        run: cat MyLatexProject/main.log
+
       # Step 5: Upload PDF as downloadable artifact
       - name: Upload PDF artifact
         uses: actions/upload-artifact@v4
