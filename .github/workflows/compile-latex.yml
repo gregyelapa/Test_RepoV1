@@ -1,0 +1,42 @@
+name: Compile LaTeX
+
+# Trigger: run on every push to the repo
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  compile:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Check out the repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Step 2: Install Tectonic LaTeX engine
+      - name: Setup Tectonic
+        uses: wtfjoke/setup-tectonic@v3
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      # Step 3: Compile LaTeX to PDF
+      - name: Compile LaTeX
+        run: tectonic MyLatexProject/main.tex
+
+      # Step 4: Upload PDF as downloadable artifact
+      - name: Upload PDF artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: compiled-pdf
+          path: MyLatexProject/main.pdf
+
+      # Step 5: Commit compiled PDF back to repository
+      - name: Commit PDF to repository
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add MyLatexProject/main.pdf
+          git commit -m "Auto-compiled PDF from OneLatex" || echo "No changes to commit"
+          git push
