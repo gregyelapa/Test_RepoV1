@@ -1,0 +1,75 @@
+\documentclass[10pt]{article}
+\usepackage[a4paper,hmargin=3cm,vmargin=3cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{csquotes}
+\usepackage{pifont}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{bm}
+\usepackage{esint}
+\usepackage{textcomp}
+\usepackage{graphicx}
+\usepackage[colorlinks=true, linkcolor=black, citecolor=black, urlcolor=blue, filecolor=black]{hyperref}
+\urlstyle{same}
+\usepackage[english]{varioref}
+\usepackage[noabbrev,english]{cleveref}
+\usepackage{parskip}
+\usepackage{lmodern}
+\usepackage[onehalfspacing]{setspace}
+\usepackage[table,xcdraw]{xcolor}
+\usepackage{framed}
+\definecolor{shadecolor}{rgb}{0.7,0.85,1}
+\clubpenalty = 10000
+\widowpenalty = 10000
+\displaywidowpenalty = 10000
+\setlength{\emergencystretch}{2em}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{longtable}
+\usepackage{pdfpages}
+\usepackage{pdflscape}
+\usepackage[backend=biber, style=numeric-comp]{biblatex}
+\setcounter{secnumdepth}{5}
+\makeatletter
+\renewcommand\paragraph{\@startsection{paragraph}{3}{0mm}{-\baselineskip}{.1\baselineskip}{\normalfont\normalsize\bfseries}}
+\renewcommand\subparagraph{\@startsection{subparagraph}{4}{0mm}{-\baselineskip}{.1\baselineskip}{\normalfont\normalsize\bfseries}}
+\makeatother
+\crefname{paragraph}{Section}{Sections}
+\crefname{subparagraph}{Section}{Sections}
+
+\begin{document}
+
+\section{Math test}\label{sec:math_test}
+Dies ist ein Test
+
+Dies ist eine Liste
+
+\begin{enumerate}
+    \item Erstes Item\\
+				$F = \left(\nabla \cdot A \bm{\mathit{B}}_{\bm{\sigma}}\right) * \nabla G + \left(\nabla \times A \bm{\mathit{B}}_{\bm{\omega}}\right) \divideontimes \nabla G$
+    \item Zweites Item\\
+				$F = \left(\nabla \cdot A \bm{\mathit{B}}_{\bm{\sigma}}\right) * \nabla G + \left(\nabla \times A \bm{\mathit{B}}_{\bm{\omega}}\right) \divideontimes \nabla G$
+    \item Drittes Item
+
+\end{enumerate}
+
+Und hier der Text nach dem Item
+
+\section{Math test2}\label{sec:math_test2}
+Dies ist ein Test
+
+Dies ist eine Liste
+
+\begin{enumerate}
+    \item Erstes Item\newline				$F = \left(\nabla \cdot A \bm{\mathit{B}}_{\bm{\sigma}}\right) * \nabla G + \left(\nabla \times A \bm{\mathit{B}}_{\bm{\omega}}\right) \divideontimes \nabla G$
+    \item Zweites Item\\				$F = \left(\nabla \cdot A \bm{\mathit{B}}_{\bm{\sigma}}\right) * \nabla G + \left(\nabla \times A \bm{\mathit{B}}_{\bm{\omega}}\right) \divideontimes \nabla G$
+    \item Drittes Item
+
+\end{enumerate}
+
+Und hier der Text nach dem Item
+
+
+\end{document} 
