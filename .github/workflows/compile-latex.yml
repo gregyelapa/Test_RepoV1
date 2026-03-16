@@ -5,7 +5,6 @@ on:
     branches:
       - main
 
-# Grant write permissions to GitHub Actions
 permissions:
   contents: write
 
@@ -20,26 +19,23 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      # Step 2: Install full LaTeX distribution including pdflatex and biber
-      - name: Install LaTeX
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y texlive-full biber
-
-      # Step 3: Compile LaTeX with latexmk (handles all passes automatically)
+      # Step 2: Compile LaTeX using xu-cheng/latex-action (fast Docker-based)
       - name: Compile LaTeX
-        run: |
-          cd MyLatexProject
-          latexmk -pdf -interaction=nonstopmode main.tex
+        uses: xu-cheng/latex-action@v4
+        with:
+          root_file: main.tex
+          working_directory: MyLatexProject
+          latexmk_use_lualatex: false
+          latexmk_shell_escape: true
 
-      # Step 4: Upload PDF as downloadable artifact
+      # Step 3: Upload PDF as downloadable artifact
       - name: Upload PDF artifact
         uses: actions/upload-artifact@v4
         with:
           name: compiled-pdf
           path: MyLatexProject/main.pdf
 
-      # Step 5: Commit compiled PDF back to repository
+      # Step 4: Commit compiled PDF back to repository
       - name: Commit PDF to repository
         run: |
           git config user.name "GitHub Actions"
