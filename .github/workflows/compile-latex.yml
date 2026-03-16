@@ -26,14 +26,11 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y texlive-full biber
 
-      # Step 3: Compile LaTeX with pdflatex (3 passes needed for bibliography)
+      # Step 3: Compile LaTeX with latexmk (handles all passes automatically)
       - name: Compile LaTeX
         run: |
           cd MyLatexProject
-          pdflatex -interaction=nonstopmode main.tex
-          biber main
-          pdflatex -interaction=nonstopmode main.tex
-          pdflatex -interaction=nonstopmode main.tex
+          latexmk -pdf -interaction=nonstopmode main.tex
 
       # Step 4: Upload PDF as downloadable artifact
       - name: Upload PDF artifact
