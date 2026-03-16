@@ -14,36 +14,29 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Step 2: Install biber with biblatex compatibility
-      - name: Install biber
+      # Step 2: Install full LaTeX distribution including pdflatex and biber
+      - name: Install LaTeX
         run: |
           sudo apt-get update
-          sudo apt-get install -y texlive-bibtex-extra
+          sudo apt-get install -y texlive-full biber
 
-      # Step 3: Install Tectonic LaTeX engine
-      - name: Setup Tectonic
-        uses: wtfjoke/setup-tectonic@v3
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-
-      # Step 4: Compile LaTeX from within project folder
+      # Step 3: Compile LaTeX with pdflatex (3 passes needed for bibliography)
       - name: Compile LaTeX
         run: |
           cd MyLatexProject
-          tectonic -X compile main.tex --keep-logs
+          pdflatex -interaction=nonstopmode main.tex
+          biber main
+          pdflatex -interaction=nonstopmode main.tex
+          pdflatex -interaction=nonstopmode main.tex
 
-      # Step 4b: Show log for debugging
-      - name: Show LaTeX log
-        run: cat MyLatexProject/main.log
-
-      # Step 5: Upload PDF as downloadable artifact
+      # Step 4: Upload PDF as downloadable artifact
       - name: Upload PDF artifact
         uses: actions/upload-artifact@v4
         with:
           name: compiled-pdf
           path: MyLatexProject/main.pdf
 
-      # Step 6: Commit compiled PDF back to repository
+      # Step 5: Commit compiled PDF back to repository
       - name: Commit PDF to repository
         run: |
           git config user.name "GitHub Actions"
