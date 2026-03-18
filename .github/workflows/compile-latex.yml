@@ -25,7 +25,7 @@ jobs:
         uses: xu-cheng/latex-action@v4
         with:
           root_file: main.tex
-          working_directory: MyLatexProject
+          working_directory: MyLatexProject2
           latexmk_use_lualatex: false
           latexmk_shell_escape: true
 
@@ -34,13 +34,13 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: compiled-pdf
-          path: MyLatexProject/main.pdf
+          path: MyLatexProject2/main.pdf
 
       # Step 4: Commit compiled PDF back to repository
       - name: Commit PDF to repository
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
-          git add MyLatexProject/main.pdf
+          git add MyLatexProject2/main.pdf
           git commit -m "Auto-compiled PDF from OneLatex" || echo "No changes to commit"
           git push
