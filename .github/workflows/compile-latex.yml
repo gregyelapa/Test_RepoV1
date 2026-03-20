@@ -28,7 +28,7 @@ jobs:
         uses: xu-cheng/latex-action@v4
         with:
           root_file: main.tex
-          working_directory: MyLatexProject2
+          working_directory: MyLatexProject
           latexmk_use_lualatex: false
           latexmk_shell_escape: true
 
@@ -37,7 +37,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: compiled-pdf
-          path: MyLatexProject2/main.pdf
+          path: MyLatexProject/main.pdf
 
       # Step 4: Commit compiled PDF back to repository
       - name: Commit PDF to repository
