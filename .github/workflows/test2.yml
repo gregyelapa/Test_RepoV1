@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - 'MyLatexProject2/**'
+      - '.github/workflows/test2.yml'
   workflow_dispatch:
 
 permissions:
