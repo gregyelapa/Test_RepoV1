@@ -1,0 +1,53 @@
+name: Compile MyLatexProject
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'MyLatexProject/**'                              # Trigger when project files change
+      - '.github/workflows/compile-MyLatexProject.yml'  # Trigger when this workflow changes
+  workflow_dispatch:
+    inputs:
+      project_folder:
+        description: 'Project folder to compile'
+        required: true
+        default: 'MyLatexProject'
+
+permissions:
+  contents: write
+
+jobs:
+  compile:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Check out the repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      # Step 2: Compile LaTeX using xu-cheng/latex-action (fast Docker-based)
+      - name: Compile MyLatexProject/main
+        uses: xu-cheng/latex-action@v4
+        with:
+          root_file: main.tex
+          working_directory: MyLatexProject
+          latexmk_shell_escape: true
+
+      # Step 3: Upload PDF as downloadable artifact
+      - name: Upload PDF artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: MyLatexProject-pdf
+          path: MyLatexProject/main.pdf
+
+      # Step 4: Commit compiled PDF back to repository
+      - name: Commit PDF to repository
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add MyLatexProject/main.pdf
+          git commit -m "Auto-compiled PDF: MyLatexProject" || echo "No changes to commit"
+          git push
