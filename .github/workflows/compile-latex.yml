@@ -44,6 +44,6 @@ jobs:
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
-          git add MyLatexProject2/main.pdf
+          git add MyLatexProject/main.pdf
           git commit -m "Auto-compiled PDF from OneLatex" || echo "No changes to commit"
           git push
