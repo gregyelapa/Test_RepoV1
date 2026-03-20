@@ -5,9 +5,12 @@ on:
     branches:
       - main
     paths:
-      - 'MyLatexProject/**'
-      - '.github/workflows/compile-latex.yml'
+      - '*/**.tex'    # Trigger on any .tex file change in any subfolder
   workflow_dispatch:
+    inputs:
+      project_folder:
+        description: 'Project folder to compile'
+        required: true
 
 permissions:
   contents: write
@@ -23,27 +26,47 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      # Step 2: Compile LaTeX using xu-cheng/latex-action (fast Docker-based)
-      - name: Compile LaTeX
+      # Step 2: Detect which folder changed
+      - name: Detect changed project folder
+        id: detect
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "folder=${{ inputs.project_folder }}" >> $GITHUB_OUTPUT
+          else
+            CHANGED=$(git diff --name-only HEAD~1 HEAD | grep '\.tex' | head -1 | cut -d'/' -f1)
+            echo "folder=$CHANGED" >> $GITHUB_OUTPUT
+          fi
+
+      # Step 3: Find main .tex file in detected folder
+      - name: Find main tex file
+        id: findtex
+        run: |
+          FOLDER="${{ steps.detect.outputs.folder }}"
+          TEXFILE=$(ls $FOLDER/*.tex | head -1 | xargs basename | sed 's/\.tex//')
+          echo "texfile=$TEXFILE" >> $GITHUB_OUTPUT
+
+      # Step 4: Compile LaTeX using xu-cheng/latex-action
+      - name: Compile ${{ steps.detect.outputs.folder }}
         uses: xu-cheng/latex-action@v4
         with:
-          root_file: main.tex
-          working_directory: MyLatexProject
-          latexmk_use_lualatex: false
+          root_file: ${{ steps.findtex.outputs.texfile }}.tex
+          working_directory: ${{ steps.detect.outputs.folder }}
           latexmk_shell_escape: true
 
-      # Step 3: Upload PDF as downloadable artifact
+      # Step 5: Upload PDF as downloadable artifact
       - name: Upload PDF artifact
         uses: actions/upload-artifact@v4
         with:
-          name: compiled-pdf
-          path: MyLatexProject/main.pdf
+          name: ${{ steps.detect.outputs.folder }}-pdf
+          path: ${{ steps.detect.outputs.folder }}/${{ steps.findtex.outputs.texfile }}.pdf
 
-      # Step 4: Commit compiled PDF back to repository
+      # Step 6: Commit compiled PDF back to repository
       - name: Commit PDF to repository
         run: |
+          FOLDER="${{ steps.detect.outputs.folder }}"
+          TEXFILE="${{ steps.findtex.outputs.texfile }}"
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
-          git add MyLatexProject/main.pdf
-          git commit -m "Auto-compiled PDF from OneLatex" || echo "No changes to commit"
+          git add $FOLDER/$TEXFILE.pdf
+          git commit -m "Auto-compiled PDF: $FOLDER" || echo "No changes to commit"
           git push
