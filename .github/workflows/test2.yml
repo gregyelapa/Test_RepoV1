@@ -21,7 +21,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       # Step 2: Compile LaTeX using xu-cheng/latex-action (fast Docker-based)
-      - name: Compile LaTeX
+      - name: Compile LaTeX Xualatex
         uses: xu-cheng/latex-action@v4
         with:
           root_file: main.tex
